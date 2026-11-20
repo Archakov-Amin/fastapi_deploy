@@ -8,6 +8,7 @@ app = FastAPI(title="FastAPI Backend Project")
 DATABASE_URL = os.getenv("DATABASE_URL", "postgresql://postgres:postgres@db:5432/app_db")
 REDIS_HOST = os.getenv("REDIS_HOST", "redis")
 REDIS_PORT = int(os.getenv("REDIS_PORT", 6379))
+REDIS_PASSWORD = os.getenv("REDIS_PASSWORD")
 
 @app.get("/")
 def root():
@@ -24,7 +25,7 @@ def health_check():
         status["db_error"] = str(e)
 
     try:
-        r = redis.Redis(host=REDIS_HOST, port=REDIS_PORT, socket_connect_timeout=2)
+        r = redis.Redis(host=REDIS_HOST, port=REDIS_PORT, password=REDIS_PASSWORD, socket_connect_timeout=2)
         if r.ping():
             status["redis"] = "connected"
     except Exception as e:
